@@ -85,10 +85,10 @@ class Path:
 
     # obstacle parameters
     obstacles_dis_min = 3.0  # how far is each obstacle from next one
-    obstacles_dis_max = 10.0
+    obstacles_dis_max = 8.0
 
-    min_obstacle_dis_to_path = 4.0  # how far from each side of path
-    max_obstacle_dis_to_path = 15.0
+    min_obstacle_dis_to_path = 3.0  # how far from each side of path
+    max_obstacle_dis_to_path = 7.0
 
     human_obstacle_percentage = 60.0  # what percentage of obstacles are human
 
@@ -196,14 +196,14 @@ class Path:
     def generate_obstacles_center(self):
         path_length_m = len(self.x_path) * 0.02
 
-        obstacles_loc_along_path_L = [0.0]
+        obstacles_loc_along_path_L = [4.0]
         while obstacles_loc_along_path_L[-1] < path_length_m:
             # place obstacles along the path as long as path exists by random length
             obstacles_loc_along_path_L.append(
                 np.random.uniform(self.obstacles_dis_min, self.obstacles_dis_max) + obstacles_loc_along_path_L[-1])
         obstacles_loc_along_path_L[-1] = path_length_m - 0.02  # last obstacle is at the end of the path
 
-        obstacles_loc_along_path_R = [0.0]
+        obstacles_loc_along_path_R = [4.0]
         while obstacles_loc_along_path_R[-1] < path_length_m - 0.02:
             obstacles_loc_along_path_R.append(
                 np.random.uniform(self.obstacles_dis_min, self.obstacles_dis_max) + obstacles_loc_along_path_R[
@@ -249,19 +249,22 @@ class Path:
 
     def pop_overlapped_obstacles(self):
         collision_checked = False
-        i = 0 # index first rectangle to check
+        i = 0  # index first rectangle to check
+        j = 1  # index first rectangle to check
         while not collision_checked:
 
-            for j in range(i+1, len(self.obstacles_corners)): # index of second rectangle to check collision
+            while j < len(self.obstacles_corners):  # index of second rectangle to check collision
                 print('i', i, ' j', j)
+                print('len', len(self.obstacles_corners))
 
                 if check_collision(self.obstacles_corners[i], self.obstacles_corners[j]):
                     self.obstacles_corners.pop(j)
-
-                if j >= len(self.obstacles_corners) -1 :
-                    break
+                    j = j - 1
+                    print('pop')
+                j += 1
 
             i += 1
-            if i == len(self.obstacles_corners) -1: collision_checked = True
-
-
+            j = i + 1
+            if i >= len(self.obstacles_corners) +1:
+                print('collision_checked')
+                collision_checked = True
