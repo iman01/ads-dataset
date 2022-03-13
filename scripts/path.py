@@ -254,13 +254,13 @@ class Path:
         while not collision_checked:
 
             while j < len(self.obstacles_corners):  # index of second rectangle to check collision
-                print('i', i, ' j', j)
-                print('len', len(self.obstacles_corners))
+                # print('i', i, ' j', j)
+                # print('len', len(self.obstacles_corners))
 
                 if check_collision(self.obstacles_corners[i], self.obstacles_corners[j]):
                     self.obstacles_corners.pop(j)
                     j = j - 1
-                    print('pop')
+                    # print('pop')
                 j += 1
 
             i += 1
