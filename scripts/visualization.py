@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+import cmapy
+import random
+
 
 class Visualize:
     def __init__(self, p):
@@ -33,26 +36,29 @@ class Visualize:
     def plot_path(self, p):
         self._po.set_xlim([min(p.x_path), max(p.x_path) + 0.5])  # TODO: change this to max and min of obstacle
         self._po.set_ylim([min(p.y_path) - 0.5, max(p.y_path) + 0.5])  # TODO: change this to max and min of obstacle
-        self._po.scatter(p.waypoints_x, p.waypoints_y, c='green')  # draw waypoints on the path
-        self._po.arrow(p.x_path[2], p.y_path[2], p.x_path[3] - p.x_path[2], p.y_path[3] - p.y_path[2], width = 0.3, color = 'blue')
-        self._po.arrow(p.x_path[-2], p.y_path[-2], p.x_path[-2] - p.x_path[-3], p.y_path[-2] - p.y_path[-3], width = 0.3, color = 'olive')
+        self._po.arrow(p.x_path[2], p.y_path[2], p.x_path[3] - p.x_path[2], p.y_path[3] - p.y_path[2], width=0.3,
+                       color='blue')
+        self._po.arrow(p.x_path[-2], p.y_path[-2], p.x_path[-2] - p.x_path[-3], p.y_path[-2] - p.y_path[-3], width=0.3,
+                       color='olive')
+        self._po.scatter(p.waypoints_x, p.waypoints_y, s=5.0, c='green')  # draw waypoints on the path
         self._po.plot(p.x_path, p.y_path, "red")  # draw the path
 
     def plot_obstacle_center(self, p):
         for i in range(len(p.obstacles_center_L)):
-            self._po.scatter(p.obstacles_center_L[i][0], p.obstacles_center_L[i][1], c='red')
+            self._po.scatter(p.obstacles_center_L[i][0], p.obstacles_center_L[i][1], s=1.5, c='red')
         for i in range(len(p.obstacles_center_R)):
-            self._po.scatter(p.obstacles_center_R[i][0], p.obstacles_center_R[i][1], c='red')
+            self._po.scatter(p.obstacles_center_R[i][0], p.obstacles_center_R[i][1], s=1.5, c='red')
 
     def plot_obstacle_corners(self, p):
         for single_rectangle in p.obstacles_corners:
+            rgb_color = cmapy.color('viridis', random.randrange(0, 256), rgb_order=True)
+            rgb_color = [random.randrange(20, 256)/255, random.randrange(20, 256)/255, random.randrange(20, 256)/255]
             for each_corner in single_rectangle:
-                self._po.scatter(each_corner[0], each_corner[1], c='blue')
-
+                self._po.scatter(each_corner[0], each_corner[1], s=1.5, color=rgb_color)
 
     def plot_show(self):
-        self._po.axis('square')
+        # self._po.axis('square')
+        self._po.axis('scaled')
         now = datetime.now()
         # plt.savefig("Figure-"+ now.strftime("%Y-%m-%d-%H-%M-%S") + ".png")
         plt.show()
-

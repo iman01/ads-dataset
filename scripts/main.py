@@ -25,7 +25,7 @@ class SampleGenerator:
 
             self.p.generate_obstacles_center()
             self.p.get_obstacle_corners()
-            # self.p.pop_overlapped_obstacles()
+            self.p.pop_overlapped_obstacles()
 
             self.visualize.plot_obstacle_center(self.p)
             self.visualize.plot_obstacle_corners(self.p)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     print('generating data... ')
 
-    num_samples = 3  # number of required samples to generate
+    num_samples = 20  # number of required samples to generate
     sample_count = 0
 
     while sample_count < num_samples:  # create dataset

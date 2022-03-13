@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from collision import check_collision
 import numpy as np
 import random
 import math
@@ -49,14 +50,16 @@ def obstacle_pose(p1, p2, dis, side):
     return obstacle_pos_point
 
 
-def get_4_corners_random(human_obstacle_percentage, center_point, dis, obstacles_orientation):  # TODO: make dis to effect on obstacle size
+def get_4_corners_random(human_obstacle_percentage, center_point, dis,
+                         obstacles_orientation):  # TODO: make dis to effect on obstacle size
     random_rotation = 0.0
     if np.random.uniform(0, 100.0) <= human_obstacle_percentage:
         dim = np.array([2.0, 2.0])
         random_rotation = obstacles_orientation
     else:
         dim = np.array([np.random.uniform(4.0, 5.5), np.random.uniform(2.0, 3.0)])
-        random_rotation = obstacles_orientation + (np.random.uniform(-20, 20) / 180) * math.pi  # random rotation of obstacle
+        random_rotation = obstacles_orientation + (
+                np.random.uniform(-20, 20) / 180) * math.pi  # random rotation of obstacle
     human_corners = get_4_corners(center_point, random_rotation, dim)
     return np.array([human_corners[0], human_corners[1], human_corners[2], human_corners[3]])
 
@@ -93,7 +96,8 @@ class Path:
     now = datetime.now()
     path = os.getcwd()
     path += "/ADS-Dataset-" + now.strftime("%Y-%m-%d-%H-%M-%S")
-    os.makedirs(path)
+
+    # os.makedirs(path)
 
     def __init__(self):
 
@@ -218,18 +222,18 @@ class Path:
             indexP2 = abs(int(
                 obstacles_loc_along_path_L[i] / 0.02) - 3)  # index of second point on path to find perpendicular line
             self.obstacles_center_L.append(obstacle_pose([self.x_path[indexP1], self.y_path[indexP1]],
-                                       [self.x_path[indexP2], self.y_path[indexP2]],
-                                       self.obstacles_dis_from_path_L[i],
-                                       True))
+                                                         [self.x_path[indexP2], self.y_path[indexP2]],
+                                                         self.obstacles_dis_from_path_L[i],
+                                                         True))
             self.obstacles_orientation_L.append(math.atan2(self.y_path[indexP1] - self.y_path[indexP2],  # path heading
                                                            self.x_path[indexP1] - self.x_path[indexP2]))
         for i in range(len(obstacles_loc_along_path_R)):
             indexP1 = int(obstacles_loc_along_path_R[i] / 0.02)  # index of point on path to find perpendicular line
             indexP2 = abs(int(obstacles_loc_along_path_R[i] / 0.02) - 3)
             self.obstacles_center_R.append(obstacle_pose([self.x_path[indexP1], self.y_path[indexP1]],
-                                       [self.x_path[indexP2], self.y_path[indexP2]],
-                                       self.obstacles_dis_from_path_R[i],
-                                       False))
+                                                         [self.x_path[indexP2], self.y_path[indexP2]],
+                                                         self.obstacles_dis_from_path_R[i],
+                                                         False))
             self.obstacles_orientation_R.append(math.atan2(self.y_path[indexP1] - self.y_path[indexP2],  # path heading
                                                            self.x_path[indexP1] - self.x_path[indexP2]))
 
@@ -242,3 +246,22 @@ class Path:
             self.obstacles_corners.append(
                 get_4_corners_random(self.human_obstacle_percentage, self.obstacles_center_L[i],
                                      self.obstacles_dis_from_path_L[i], self.obstacles_orientation_L[i]))
+
+    def pop_overlapped_obstacles(self):
+        collision_checked = False
+        i = 0 # index first rectangle to check
+        while not collision_checked:
+
+            for j in range(i+1, len(self.obstacles_corners)): # index of second rectangle to check collision
+                print('i', i, ' j', j)
+
+                if check_collision(self.obstacles_corners[i], self.obstacles_corners[j]):
+                    self.obstacles_corners.pop(j)
+
+                if j >= len(self.obstacles_corners) -1 :
+                    break
+
+            i += 1
+            if i == len(self.obstacles_corners) -1: collision_checked = True
+
+
