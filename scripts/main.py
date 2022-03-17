@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     print('generating data... ')
 
-    num_samples = 100  # number of required samples to generate
+    num_samples = 1  # number of required samples to generate
     sample_count = 0
 
     while sample_count < num_samples:  # create dataset

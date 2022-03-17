@@ -191,6 +191,10 @@ class Path:
             if y_path_elem < -9.5 or y_path_elem > 9.5:
                 return False
 
+        if self.waypoints_distance[-2] < 5.0:
+            print('self.waypoints_distance[-2]', self.waypoints_distance[-2] )
+            return False
+
         return True
 
     def generate_obstacles_center(self):
@@ -265,6 +269,6 @@ class Path:
 
             i += 1
             j = i + 1
-            if i >= len(self.obstacles_corners) +1:
+            if i >= len(self.obstacles_corners) + 1:
                 print('collision_checked')
                 collision_checked = True
