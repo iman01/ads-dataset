@@ -191,8 +191,8 @@ class Path:
             if y_path_elem < -9.5 or y_path_elem > 9.5:
                 return False
 
-        if self.waypoints_distance[-2] < 5.0:
-            print('self.waypoints_distance[-2]', self.waypoints_distance[-2] )
+        if self.waypoints_distance[-1] < 5.0:
+            print('self.waypoints_distance[-1]', self.waypoints_distance[-1] )
             return False
 
         return True

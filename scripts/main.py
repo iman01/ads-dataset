@@ -12,7 +12,7 @@ class SampleGenerator:
     def __init__(self):
         self.visualize = None
         self.cv_map = None
-        self.p = Path()                          # create path object
+        self.p = Path()  # create path object
         self.p.generate_curvature_polynomials()  # generate list of polynomials parameters
         self.p.generate_path()
 
@@ -33,7 +33,11 @@ class SampleGenerator:
             self.visualize.plot_obstacle_corners(self.p)
             self.visualize.plot_show()
 
-            self.cv_map = CvMap(self.p.map_path, self.p.obstacles_corners)
+            self.cv_map = CvMap()
+            self.cv_map.draw_path(self.p.map_path)
+            self.cv_map.draw_obstacles(self.p.obstacles_corners)
+
+            self.cv_map.show_map()
 
             return True
         else:
