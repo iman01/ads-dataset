@@ -23,6 +23,7 @@ class SampleGenerator:
 
             self.visualize = Visualize(self.p)
             self.visualize.plot_curvature(self.p)
+            self.p.generate_path_lane()
             self.visualize.plot_path(self.p)
 
             self.p.generate_obstacles_center()
@@ -35,8 +36,8 @@ class SampleGenerator:
 
             self.cv_map = CvMap()
             self.cv_map.draw_path(self.p.map_path)
-            self.cv_map.draw_obstacles(self.p.obstacles_corners)
-
+            self.cv_map.draw_path_lane(self.p.map_lane)
+            # self.cv_map.draw_obstacles(self.p.obstacles_corners)
             self.cv_map.show_map()
 
             return True

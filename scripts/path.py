@@ -73,6 +73,7 @@ class Path:
 
     # car parameters
     car_wheelbase_m = 2.5
+    car_width = 3.0
     car_steering_wheel_max_deg = 40.00
     path_max_curvature = 1 / (5.3 - 1.792 / 2)
 
@@ -133,6 +134,7 @@ class Path:
         self.waypoints_x = []
         self.waypoints_y = []
         self.map_path = []
+        self.map_lane = []
 
         self.obstacles_center_L = []
         self.obstacles_center_R = []
@@ -192,7 +194,7 @@ class Path:
                 return False
 
         if self.waypoints_distance[-1] < 5.0:
-            print('self.waypoints_distance[-1]', self.waypoints_distance[-1] )
+            print('self.waypoints_distance[-1]', self.waypoints_distance[-1])
             return False
 
         return True
@@ -272,3 +274,22 @@ class Path:
             if i >= len(self.obstacles_corners) + 1:
                 print('collision_checked')
                 collision_checked = True
+
+    def generate_path_lane(self):
+        #  print('len map path', len(self.x_path))
+
+        for i in range(len(self.x_path)):
+
+            if i == len(self.x_path) - 3:  # break if counter reached 3 index before end
+                break
+
+            self.map_lane.append(obstacle_pose([self.x_path[i], self.y_path[i]],
+                                               [self.x_path[i + 2], self.y_path[i + 2]], self.car_width/2, True))
+        for i in range(len(self.x_path), -1, -1):
+
+            if i == 3:  # break if counter reached 3 index before end
+                break
+
+            self.map_lane.append(obstacle_pose([self.x_path[i - 1], self.y_path[i - 1]],
+                                               [self.x_path[i - 3], self.y_path[i - 3]], self.car_width/2, False))
+

@@ -43,6 +43,9 @@ class Visualize:
         self._po.scatter(p.waypoints_x, p.waypoints_y, s=5.0, c='green')  # draw waypoints on the path
         self._po.plot(p.x_path, p.y_path, "red")  # draw the path
 
+        for i in range(len(p.map_lane)):
+            self._po.scatter(p.map_lane[i][0], p.map_lane[i][1], s=2.0, c='blue')
+
     def plot_obstacle_center(self, p):
         for i in range(len(p.obstacles_center_L)):
             self._po.scatter(p.obstacles_center_L[i][0], p.obstacles_center_L[i][1], s=1.5, c='red')
